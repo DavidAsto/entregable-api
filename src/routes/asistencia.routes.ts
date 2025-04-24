@@ -17,18 +17,6 @@ router.put("/salida", asistenciaController.createSalida.bind(asistenciaControlle
 
 
 
-//USAR ESTE TIPO DE RUTAS EN CASO NO FUNCIONE LAS DE ARRIBA SIGUIENDO TAMBIEN LO PUESTO EN EL CONTROLLADOR
-
-//router.get('/', asistenciaController.getAsistencias);
-//router.get('/:id', asistenciaController.getAsistenciaById);
-//router.get('/empleadoAsistencia/:empleadoId', asistenciaController.getAsistenciasByEmpleadoId);
-//router.get('/actual/:empleadoId', asistenciaController.getAsistenciaActual);
-
-//router.post('/ingreso', asistenciaController.createIngreso);
-//router.post('/salida', asistenciaController.createSalida);
-
-
-
 
 
 

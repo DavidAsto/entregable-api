@@ -52,7 +52,7 @@ export class AsistenciaService {
                 horas_trabajadas: 0
             };
         } catch (error) {
-            console.error('Error en createIngreso:', error); // Log para depuración
+            console.error('Error en createIngreso:', error); 
             throw new Error('Error al crear el ingreso');
         }
     }
@@ -67,8 +67,7 @@ export class AsistenciaService {
         const fechaSalida = new Date();
         const ingreso = new Date(asistenciaAbierto.ingreso);
     
-        const horas_trabajadas = parseFloat(((fechaSalida.getTime() - ingreso.getTime()) / (1000 * 60 * 60)).toFixed(2)); // Convertir a horas
-        
+        const horas_trabajadas = parseFloat(((fechaSalida.getTime() - ingreso.getTime()) / (1000 * 60 * 60)).toFixed(2));
         const [result] = await pool.query<ResultSetHeader>('UPDATE asistencias SET salida = ?, horas_trabajadas = ? WHERE id = ?', [fechaSalida, horas_trabajadas, asistenciaAbierto.id]);
     
         if (result.affectedRows === 0) {

@@ -12,13 +12,7 @@ export class AsistenciaController {
         this.asistenciaService = new AsistenciaService();
 
 
-        //BINDS PARA QUE LAS RUTAS FUNCIONEN, USAR EN CASO EL PRIMER METODO NO FUNCIONE
-        //this.getAsistencias = this.getAsistencias.bind(this);
-        //this.getAsistenciaById = this.getAsistenciaById.bind(this);
-        //this.getAsistenciasByEmpleadoId = this.getAsistenciasByEmpleadoId.bind(this);
-        //this.createIngreso = this.createIngreso.bind(this);
-        //this.createSalida = this.createSalida.bind(this);
-        //this.getAsistenciaActual = this.getAsistenciaActual.bind(this);
+        
     }
 
     async getAsistencias(req: Request, res: Response): Promise<Response> {
@@ -67,7 +61,7 @@ export class AsistenciaController {
                 return res.status(400).json({ error: 'Faltan datos requeridos o el formato es incorrecto' });
             }
 
-            let valorReceso = Receso.NO; // Cambia esto según tu lógica de negocio
+            let valorReceso = Receso.NO; 
             if (receso !== Receso.SI && receso !== Receso.NO) {
                 return res.status(400).json({ error: 'El valor de receso no es válido' });
             }
@@ -135,7 +129,7 @@ export class AsistenciaController {
             return res.status(200).json({
                 data: {
                     ...asistenciaActual,
-                    tiempoTranscurrido: horasTrabajadas.toFixed(2), // Redondear a 2 decimales
+                    tiempoTranscurrido: horasTrabajadas.toFixed(2), 
                 }
             });
         } catch (error) {

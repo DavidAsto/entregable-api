@@ -55,7 +55,6 @@ export class EmpleadoService {
             return null;
         }
     
-        // Eliminar el empleado de la base de datos
     
         const [result] = await pool.query<ResultSetHeader>('DELETE FROM empleados WHERE id = ?', [id]);
     
