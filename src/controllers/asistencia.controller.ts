@@ -63,13 +63,13 @@ export class AsistenciaController {
         try {
             const { empleadoId, receso } = req.body;
 
-            if (!empleadoId || receso === undefined) {
-                return res.status(400).json({ error: 'Faltan datos requeridos' });
+            if (!empleadoId || isNaN(Number(empleadoId)) || receso === undefined) {
+                return res.status(400).json({ error: 'Faltan datos requeridos o el formato es incorrecto' });
             }
 
             let valorReceso = Receso.NO; // Cambia esto según tu lógica de negocio
-            if (receso && (receso === Receso.SI || receso === Receso.NO)) {
-                valorReceso = receso;
+            if (receso !== Receso.SI && receso !== Receso.NO) {
+                return res.status(400).json({ error: 'El valor de receso no es válido' });
             }
 
             try{

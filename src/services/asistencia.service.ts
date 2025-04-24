@@ -29,24 +29,32 @@ export class AsistenciaService {
     }
     
     async createIngreso(empleadoId: number, receso: Receso = Receso.NO): Promise<Asistencia> {
-        const asistenciaAbierto = await this.getAsistenciaActual(empleadoId);
-        if (asistenciaAbierto) {
-            throw new Error('Ya existe un registro de ingreso abierto para este empleado.');
+        try {
+            const asistenciaAbierto = await this.getAsistenciaActual(empleadoId);
+            if (asistenciaAbierto) {
+                throw new Error('Ya existe un registro de ingreso abierto para este empleado.');
+            }
+    
+            const fechaIngreso = new Date();
+    
+            const [result] = await pool.query<ResultSetHeader>(
+                'INSERT INTO asistencias (empleado_id, ingreso, receso, horas_trabajadas) VALUES (?, ?, ?, 0)',
+                [empleadoId, fechaIngreso, receso]
+            );
+    
+            const id = result.insertId;
+            return {
+                id,
+                empleado_id: empleadoId,
+                ingreso: fechaIngreso,
+                salida: null as unknown as Date,
+                receso: receso,
+                horas_trabajadas: 0
+            };
+        } catch (error) {
+            console.error('Error en createIngreso:', error); // Log para depuración
+            throw new Error('Error al crear el ingreso');
         }
-        
-        const fechaIngreso = new Date();
-    
-        const [result] = await pool.query<ResultSetHeader>('INSERT INTO asistencias (empleado_id, ingreso, receso) VALUES (?, ?, ?)', [empleadoId, fechaIngreso, receso]);
-    
-        const id = result.insertId;
-        return {
-            id,
-            empleado_id: empleadoId,
-            ingreso: fechaIngreso,
-            salida: null as unknown as Date,
-            receso: receso,
-            horas_trabajadas: 0
-        };
     }
     
     
@@ -59,7 +67,7 @@ export class AsistenciaService {
         const fechaSalida = new Date();
         const ingreso = new Date(asistenciaAbierto.ingreso);
     
-        const horas_trabajadas = +(fechaSalida.getTime() - ingreso.getTime()) / (1000 * 60 * 60); // Convertir a horas
+        const horas_trabajadas = parseFloat(((fechaSalida.getTime() - ingreso.getTime()) / (1000 * 60 * 60)).toFixed(2)); // Convertir a horas
         
         const [result] = await pool.query<ResultSetHeader>('UPDATE asistencias SET salida = ?, horas_trabajadas = ? WHERE id = ?', [fechaSalida, horas_trabajadas, asistenciaAbierto.id]);
     
